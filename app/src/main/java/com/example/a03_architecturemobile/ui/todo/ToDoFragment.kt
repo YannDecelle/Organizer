@@ -48,13 +48,13 @@ class ToDoFragment : Fragment() {
             adapter.updateTasks(tasks)
         }
 
-        // FloatingActionButton to add a new task
+        // Button to add a new task
         val fab: FloatingActionButton = binding.fabAddTask
         fab.setOnClickListener {
             showTaskDialog(toDoViewModel, null)
         }
 
-        // Set the page title
+        // Page title
         binding.textToDo.text = "To Do List"
 
         return root
@@ -79,25 +79,47 @@ class ToDoFragment : Fragment() {
 
         // If editing, pre-fill the fields
         var selectedDeadline: Long? = null
+        var selectedYear = -1
+        var selectedMonth = -1
+        var selectedDay = -1
+        var selectedHour = 0
+        var selectedMinute = 0
         if (editPos != null) {
             val task = viewModel.tasks.value?.get(editPos)
             input.setText(task?.title ?: "")
             if (task?.deadline != null) {
                 val cal = Calendar.getInstance().apply { timeInMillis = task.deadline!! }
-                deadlineButton.setText("%02d/%02d/%04d".format(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)))
+                selectedYear = cal.get(Calendar.YEAR)
+                selectedMonth = cal.get(Calendar.MONTH)
+                selectedDay = cal.get(Calendar.DAY_OF_MONTH)
+                selectedHour = cal.get(Calendar.HOUR_OF_DAY)
+                selectedMinute = cal.get(Calendar.MINUTE)
+                deadlineButton.setText("%02d/%02d/%04d %02d:%02d".format(selectedDay, selectedMonth+1, selectedYear, selectedHour, selectedMinute))
                 selectedDeadline = task.deadline
             }
         }
 
-        // Date picker for deadline
+        // Date and time picker for deadline
         deadlineButton.setOnClickListener {
             val cal = Calendar.getInstance()
-            val listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                cal.set(year, month, dayOfMonth, 0, 0, 0)
-                selectedDeadline = cal.timeInMillis
-                deadlineButton.setText("%02d/%02d/%04d".format(dayOfMonth, month+1, year))
+            if (selectedDeadline != null) {
+                cal.timeInMillis = selectedDeadline!!
             }
-            DatePickerDialog(context, listener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+            val dateListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                selectedYear = year
+                selectedMonth = month
+                selectedDay = dayOfMonth
+
+                val timeListener = android.app.TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    selectedHour = hourOfDay
+                    selectedMinute = minute
+                    cal.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute, 0)
+                    selectedDeadline = cal.timeInMillis
+                    deadlineButton.setText("%02d/%02d/%04d %02d:%02d".format(selectedDay, selectedMonth+1, selectedYear, selectedHour, selectedMinute))
+                }
+                android.app.TimePickerDialog(context, timeListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+            }
+            DatePickerDialog(context, dateListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
 
         // Build and show the dialog
