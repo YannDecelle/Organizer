@@ -21,4 +21,7 @@ interface ReminderDao {
 
     @Delete
     suspend fun delete(reminder: Reminder)
+
+    @Query("DELETE FROM reminders WHERE taskId = :taskId AND remindAt <= :now")
+    suspend fun deleteRemindersBeforeNow(taskId: Int, now: Long)
 }

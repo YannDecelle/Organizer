@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.a03_architecturemobile.databinding.FragmentReminderBinding
+import com.example.a03_architecturemobile.data.NotificationTime
 
 class ReminderFragment : Fragment() {
 
@@ -63,18 +64,37 @@ class ReminderFragment : Fragment() {
         val context = requireContext()
         val inputTitle = EditText(context)
         inputTitle.hint = "Reminder title"
-    val inputDescription = EditText(context)
-    inputDescription.hint = "Description"
-    val dateTimeButton = EditText(context)
-    dateTimeButton.hint = "Select date & time"
-    dateTimeButton.isFocusable = false
+        val inputDescription = EditText(context)
+        inputDescription.hint = "Description"
+        val dateTimeButton = EditText(context)
+        dateTimeButton.hint = "Select date & time"
+        dateTimeButton.isFocusable = false
 
-    val layout = androidx.appcompat.widget.LinearLayoutCompat(context)
-    layout.orientation = androidx.appcompat.widget.LinearLayoutCompat.VERTICAL
-    layout.addView(inputTitle)
-    layout.addView(inputDescription)
-    layout.addView(dateTimeButton)
+        // Notification checkboxes
+    val notificationOptions = NotificationTime.values()
+        val notificationCheckboxes = notificationOptions.map { option ->
+            android.widget.CheckBox(context).apply {
+                text = when(option) {
+                    NotificationTime.MINUTE -> "1 minute before"
+                    NotificationTime.HOUR -> "1 hour before"
+                    NotificationTime.DAY -> "1 day before"
+                    NotificationTime.WEEK -> "1 week before"
+                }
+            }
+        }
 
+        val layout = androidx.appcompat.widget.LinearLayoutCompat(context)
+        layout.orientation = androidx.appcompat.widget.LinearLayoutCompat.VERTICAL
+        layout.addView(inputTitle)
+        layout.addView(inputDescription)
+        layout.addView(dateTimeButton)
+        val notifLabel = android.widget.TextView(context)
+        notifLabel.text = "Notification"
+        notifLabel.setPadding(0, 16, 0, 0)
+        layout.addView(notifLabel)
+        notificationCheckboxes.forEach { layout.addView(it) }
+
+        // DateTime Picker
         var selectedDateTime: Long? = null
         var selectedYear = -1
         var selectedMonth = -1
@@ -94,6 +114,11 @@ class ReminderFragment : Fragment() {
                 selectedMinute = cal.get(java.util.Calendar.MINUTE)
                 dateTimeButton.setText("%02d/%02d/%04d %02d:%02d".format(selectedDay, selectedMonth+1, selectedYear, selectedHour, selectedMinute))
                 selectedDateTime = reminder.dateTime
+            }
+            // Pre-check notification checkboxes if editing
+            reminder?.notifications?.forEach { notif ->
+                val idx = notificationOptions.indexOf(notif)
+                if (idx >= 0) notificationCheckboxes[idx].isChecked = true
             }
         }
 
@@ -124,14 +149,15 @@ class ReminderFragment : Fragment() {
             .setPositiveButton("Save") { _, _ ->
                 val title = inputTitle.text.toString().trim()
                 val description = inputDescription.text.toString().trim()
+                val selectedNotifications = notificationOptions.filterIndexed { idx, _ -> notificationCheckboxes[idx].isChecked }
                 if (title.isEmpty()) {
                     Toast.makeText(context, "Reminder title cannot be empty", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
                 if (editPos == null) {
-                    viewModel.addReminder(Reminder(0, title, description, selectedDateTime))
+                    viewModel.addReminder(Reminder(0, title, description, selectedDateTime, selectedNotifications))
                 } else {
-                    viewModel.editReminder(editPos, title, description, selectedDateTime)
+                    viewModel.editReminder(editPos, title, description, selectedDateTime, selectedNotifications)
                 }
             }
             .setNegativeButton("Cancel", null)

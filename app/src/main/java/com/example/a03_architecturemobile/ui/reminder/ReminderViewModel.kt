@@ -1,9 +1,9 @@
 package com.example.a03_architecturemobile.ui.reminder
-
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.a03_architecturemobile.data.ReminderRepository
 import com.example.a03_architecturemobile.data.Reminder as DataReminder
+import com.example.a03_architecturemobile.data.NotificationTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -25,17 +25,18 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+
     fun addReminder(reminder: Reminder) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertReminder(reminder.toDataReminder(taskId))
         }
     }
 
-    fun editReminder(pos: Int, title: String, description: String, dateTime: Long?) {
+    fun editReminder(pos: Int, title: String, description: String, dateTime: Long?, notifications: List<NotificationTime>) {
         val currentList = _reminders.value ?: return
         if (pos !in currentList.indices) return
         val oldReminder = currentList[pos]
-        val updatedReminder = oldReminder.copy(title = title, description = description, dateTime = dateTime)
+        val updatedReminder = oldReminder.copy(title = title, description = description, dateTime = dateTime, notifications = notifications)
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateReminder(updatedReminder.toDataReminderWithId(oldReminder.id, taskId))
         }
@@ -50,12 +51,19 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun purgeDeprecatedReminders() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteRemindersBeforeNow(taskId, System.currentTimeMillis())
+        }
+    }
+
     // Mapping functions
     private fun DataReminder.toUiReminder(): Reminder = Reminder(
         id = this.id,
         title = this.title,
         description = this.description,
-        dateTime = this.remindAt
+        dateTime = this.remindAt,
+        notifications = this.notifications
     )
 
     private fun Reminder.toDataReminder(taskId: Int): DataReminder = DataReminder(
@@ -63,7 +71,8 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         description = this.description,
         remindAt = this.dateTime ?: 0L,
         title = this.title,
-        id = this.id
+        id = this.id,
+        notifications = this.notifications
     )
 
     private fun Reminder.toDataReminderWithId(id: Int, taskId: Int): DataReminder = DataReminder(
@@ -71,6 +80,7 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         taskId = taskId,
         description = this.description,
         remindAt = this.dateTime ?: 0L,
-        title = this.title
+        title = this.title,
+        notifications = this.notifications
     )
 }

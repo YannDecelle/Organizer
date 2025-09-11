@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.a03_architecturemobile.R
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.a03_architecturemobile.data.NotificationTime
 
 
 class ReminderAdapter(
@@ -39,6 +40,7 @@ class ReminderAdapter(
     private val dateTimeText: TextView = view.findViewById(R.id.text_reminder_datetime)
     private val editButton: ImageButton = view.findViewById(R.id.button_edit_reminder)
     private val deleteButton: ImageButton = view.findViewById(R.id.button_delete_reminder)
+    private val notificationsText: TextView? = view.findViewById(R.id.text_reminder_notifications)
 
         // Bind data to the view
         fun bind(reminder: Reminder) {
@@ -48,6 +50,18 @@ class ReminderAdapter(
                 val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                 dateFormat.format(Date(dateTimeMillis))
             } ?: ""
+
+            // Show notification options as a comma-separated string
+            notificationsText?.text = if (reminder.notifications.isNotEmpty()) {
+                reminder.notifications.joinToString(", ") { notif ->
+                    when (notif) {
+                        NotificationTime.MINUTE -> "Before a minute"
+                        NotificationTime.HOUR -> "Before an hour"
+                        NotificationTime.DAY -> "Before a day"
+                        NotificationTime.WEEK -> "Before a week"
+                    }
+                }
+            } else ""
 
             editButton.setOnClickListener { onEdit(adapterPosition) }
             deleteButton.setOnClickListener { onDelete(adapterPosition) }

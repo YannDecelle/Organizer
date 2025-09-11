@@ -14,4 +14,6 @@ class ReminderRepository(context: Context) {
     suspend fun updateReminder(reminder: Reminder) = reminderDao.update(reminder)
 
     suspend fun deleteReminder(reminder: Reminder) = reminderDao.delete(reminder)
+
+    suspend fun deleteRemindersBeforeNow(taskId: Int, now: Long) = reminderDao.deleteRemindersBeforeNow(taskId, now)
 }

@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Define the database with both Task and Reminder entities
-@Database(entities = [Task::class, Reminder::class], version = 2, exportSchema = false)
+@Database(entities = [Task::class, Reminder::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun reminderDao(): ReminderDao
@@ -22,8 +22,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                .fallbackToDestructiveMigration()
-                .build()
+                .fallbackToDestructiveMigration() // Handle migrations by recreating the database
+                .build() // Build the database 
                 INSTANCE = instance
                 instance
             }

@@ -22,6 +22,7 @@ class ToDoFragment : Fragment() {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private lateinit var adapter: TaskAdapter
+    private lateinit var reminderViewModel: com.example.a03_architecturemobile.ui.reminder.ReminderViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +30,8 @@ class ToDoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Get ViewModel instance
-        val toDoViewModel = ViewModelProvider(this).get(ToDoViewModel::class.java)
+    val toDoViewModel = ViewModelProvider(this).get(ToDoViewModel::class.java)
+    reminderViewModel = ViewModelProvider(this).get(com.example.a03_architecturemobile.ui.reminder.ReminderViewModel::class.java)
         _binding = FragmentToDoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -134,6 +136,19 @@ class ToDoFragment : Fragment() {
                 }
                 if (editPos == null) {
                     viewModel.addTask(Task(0, title, false, selectedDeadline))
+                    // Make it so a reminder is set if a deadline is specified in the task
+                    if (selectedDeadline != null) {
+                        val allNotifications = com.example.a03_architecturemobile.data.NotificationTime.values().toList()
+                        reminderViewModel.addReminder(
+                            com.example.a03_architecturemobile.ui.reminder.Reminder(
+                                id = 0,
+                                title = "Deadline",
+                                description = title,
+                                dateTime = selectedDeadline,
+                                notifications = allNotifications
+                            )
+                        )
+                    }
                 } else {
                     viewModel.editTask(editPos, title, selectedDeadline)
                 }
