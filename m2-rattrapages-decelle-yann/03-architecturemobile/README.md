@@ -30,6 +30,20 @@ Dans ce cas, une popup apparaît en bas à droite → cliquez dessus pour **réi
 * Cliquer sur **Run** dans Android Studio.
 * L’application s’installe et démarre automatiquement.
 
+### 3. Ouvrir dans Android Studio
+
+Les fonctionnalités sont les suivantes : 
+
+Création / Suppression / édition de tâche
+
+Création / Suppression / édition de Rappels
+
+Si une tâche a une deadline, cela créer automatiquement un rappel
+
+Si la date du rappel est dépassé, il sera affiché dans l'historique
+
+L'historique permet de supprimer tous les rappel dépassé à l'aide d'un bouton
+
 ## Démonstration
 
 [Demo video](https://youtube.com/shorts/zJ8G9R0I6jw?si=e1b_Xi-Mt5LIX0SL)
