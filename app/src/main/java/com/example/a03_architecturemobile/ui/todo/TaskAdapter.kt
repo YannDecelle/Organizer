@@ -65,10 +65,9 @@ class TaskAdapter(
             override fun getOldListSize() = taskList.size
             override fun getNewListSize() = newTaskList.size
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-
                 val oldTask = taskList[oldItemPosition]
                 val newTask = newTaskList[newItemPosition]
-                return oldTask.title == newTask.title && oldTask.deadline == newTask.deadline
+                return oldTask.id == newTask.id
             }
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 return taskList[oldItemPosition] == newTaskList[newItemPosition]

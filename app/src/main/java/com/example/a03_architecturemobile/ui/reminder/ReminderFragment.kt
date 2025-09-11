@@ -63,17 +63,17 @@ class ReminderFragment : Fragment() {
         val context = requireContext()
         val inputTitle = EditText(context)
         inputTitle.hint = "Reminder title"
-        val inputDescription = EditText(context)
-        inputDescription.hint = "Description"
-        val dateTimeButton = EditText(context)
-        dateTimeButton.hint = "Select date & time"
-        dateTimeButton.isFocusable = false
+    val inputDescription = EditText(context)
+    inputDescription.hint = "Description"
+    val dateTimeButton = EditText(context)
+    dateTimeButton.hint = "Select date & time"
+    dateTimeButton.isFocusable = false
 
-        val layout = androidx.appcompat.widget.LinearLayoutCompat(context)
-        layout.orientation = androidx.appcompat.widget.LinearLayoutCompat.VERTICAL
-        layout.addView(inputTitle)
-        layout.addView(inputDescription)
-        layout.addView(dateTimeButton)
+    val layout = androidx.appcompat.widget.LinearLayoutCompat(context)
+    layout.orientation = androidx.appcompat.widget.LinearLayoutCompat.VERTICAL
+    layout.addView(inputTitle)
+    layout.addView(inputDescription)
+    layout.addView(dateTimeButton)
 
         var selectedDateTime: Long? = null
         var selectedYear = -1
@@ -129,7 +129,7 @@ class ReminderFragment : Fragment() {
                     return@setPositiveButton
                 }
                 if (editPos == null) {
-                    viewModel.addReminder(Reminder(title, description, selectedDateTime))
+                    viewModel.addReminder(Reminder(0, title, description, selectedDateTime))
                 } else {
                     viewModel.editReminder(editPos, title, description, selectedDateTime)
                 }

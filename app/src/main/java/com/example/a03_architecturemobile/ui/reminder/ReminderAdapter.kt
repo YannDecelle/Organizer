@@ -34,11 +34,11 @@ class ReminderAdapter(
 
     // ViewHolder for reminder items
     inner class ReminderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val titleText: TextView = view.findViewById(R.id.text_reminder_title)
-        private val descriptionText: TextView = view.findViewById(R.id.text_reminder_description)
-        private val dateTimeText: TextView = view.findViewById(R.id.text_reminder_datetime)
-        private val editButton: ImageButton = view.findViewById(R.id.button_edit_reminder)
-        private val deleteButton: ImageButton = view.findViewById(R.id.button_delete_reminder)
+    private val titleText: TextView = view.findViewById(R.id.text_reminder_title)
+    private val descriptionText: TextView = view.findViewById(R.id.text_reminder_description)
+    private val dateTimeText: TextView = view.findViewById(R.id.text_reminder_datetime)
+    private val editButton: ImageButton = view.findViewById(R.id.button_edit_reminder)
+    private val deleteButton: ImageButton = view.findViewById(R.id.button_delete_reminder)
 
         // Bind data to the view
         fun bind(reminder: Reminder) {

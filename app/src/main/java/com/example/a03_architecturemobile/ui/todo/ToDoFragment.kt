@@ -133,7 +133,7 @@ class ToDoFragment : Fragment() {
                     return@setPositiveButton
                 }
                 if (editPos == null) {
-                    viewModel.addTask(Task(title, false, selectedDeadline))
+                    viewModel.addTask(Task(0, title, false, selectedDeadline))
                 } else {
                     viewModel.editTask(editPos, title, selectedDeadline)
                 }
