@@ -17,6 +17,7 @@ class ReminderFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    // Sets up view binding and observes ReminderViewModel text updates
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +36,7 @@ class ReminderFragment : Fragment() {
         return root
     }
 
+    // Clean up binding
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
