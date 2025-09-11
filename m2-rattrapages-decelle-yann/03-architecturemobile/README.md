@@ -32,5 +32,4 @@ Dans ce cas, une popup apparaît en bas à droite → cliquez dessus pour **réi
 
 ## Démonstration
 
-Lien vers la vidéo Loom/YouTube (non-répertoriée) à insérer ici :
 [Demo video](https://youtube.com/shorts/zJ8G9R0I6jw?si=e1b_Xi-Mt5LIX0SL)
