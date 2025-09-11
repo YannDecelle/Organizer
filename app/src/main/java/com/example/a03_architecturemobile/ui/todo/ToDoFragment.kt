@@ -36,7 +36,7 @@ class ToDoFragment : Fragment() {
         // Set up RecyclerView 
         val recyclerView = binding.recyclerViewTasks
         adapter = TaskAdapter(mutableListOf(),
-            onEdit = { pos -> showTaskDialog(toDoViewModel, adapter, pos) },
+            onEdit = { pos -> showTaskDialog(toDoViewModel, pos) },
             onDelete = { pos -> toDoViewModel.deleteTask(pos) },
             onDoneChanged = { pos, isDone -> toDoViewModel.setTaskDone(pos, isDone) }
         )
@@ -51,7 +51,7 @@ class ToDoFragment : Fragment() {
         // FloatingActionButton to add a new task
         val fab: FloatingActionButton = binding.fabAddTask
         fab.setOnClickListener {
-            showTaskDialog(toDoViewModel, adapter, null)
+            showTaskDialog(toDoViewModel, null)
         }
 
         // Set the page title
@@ -61,7 +61,7 @@ class ToDoFragment : Fragment() {
     }
 
     // Show dialog to add or edit a task
-    private fun showTaskDialog(viewModel: ToDoViewModel, adapter: TaskAdapter, editPos: Int?) {
+    private fun showTaskDialog(viewModel: ToDoViewModel, editPos: Int?) {
 
         // Get context and create input fields
         val context = requireContext()
