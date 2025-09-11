@@ -60,7 +60,6 @@ class ReminderFragment : Fragment() {
 
     // Show dialog to add or edit a reminder
     private fun showReminderDialog(viewModel: ReminderViewModel, editPos: Int?) {
-        // val adapter = this.adapter
         val context = requireContext()
         val inputTitle = EditText(context)
         inputTitle.hint = "Reminder title"
