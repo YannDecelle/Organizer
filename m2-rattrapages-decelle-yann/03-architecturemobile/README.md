@@ -30,7 +30,7 @@ Dans ce cas, une popup apparaît en bas à droite → cliquez dessus pour **réi
 * Cliquer sur **Run** dans Android Studio.
 * L’application s’installe et démarre automatiquement.
 
-### 3. Ouvrir dans Android Studio
+### 4. Fonjctionnalité
 
 Les fonctionnalités sont les suivantes : 
 
